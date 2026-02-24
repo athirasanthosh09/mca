@@ -45,43 +45,48 @@ const AdminHome = () => {
         fetchData();
     }, []);
 
-    const StatCard = ({ title, value, icon, iconBg, trend, trendColor = 'secondary.main' }) => (
-        <Card>
-            <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
-                    <Box
-                        sx={{
-                            width: 48,
-                            height: 48,
-                            borderRadius: '12px',
-                            bgcolor: iconBg,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        {icon}
-                    </Box>
-                    {trend && (
-                        <Chip
-                            label={trend}
-                            size="small"
-                            sx={{
-                                bgcolor: `${trendColor}15`,
+    const StatCard = ({ title, value, icon, iconBg, iconColor, trend, trendColor = '#34C759' }) => (
+        <Card sx={{
+            height: '100%',
+            borderRadius: 3,
+            border: '1px solid',
+            borderColor: 'divider',
+            boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+            transition: 'transform 0.18s, box-shadow 0.18s',
+            '&:hover': { transform: 'translateY(-3px)', boxShadow: '0 8px 24px rgba(0,0,0,0.10)' },
+            overflow: 'hidden',
+            position: 'relative',
+        }}>
+            {/* Accent bar */}
+            <Box sx={{ height: 4, bgcolor: iconColor, width: '100%' }} />
+            <CardContent sx={{ p: 2.5, display: 'flex', alignItems: 'center', gap: 2.5 }}>
+                <Box sx={{
+                    width: 52, height: 52, borderRadius: '14px',
+                    bgcolor: iconBg, display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', flexShrink: 0,
+                }}>
+                    {icon}
+                </Box>
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Typography variant="body2" color="text.secondary" fontWeight={500} noWrap sx={{ mb: 0.25 }}>
+                        {title}
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Typography variant="h4" fontWeight={800} sx={{ lineHeight: 1.1 }}>
+                            {value.toLocaleString()}
+                        </Typography>
+                        {trend && (
+                            <Chip label={trend} size="small" sx={{
+                                bgcolor: `${trendColor}18`,
                                 color: trendColor,
                                 fontWeight: 700,
-                                fontSize: '0.688rem',
-                                height: 24,
-                            }}
-                        />
-                    )}
+                                fontSize: '0.68rem',
+                                height: 22,
+                                ml: 0.5,
+                            }} />
+                        )}
+                    </Box>
                 </Box>
-                <Typography variant="h3" fontWeight={700} sx={{ mb: 0.5 }}>
-                    {value.toLocaleString()}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                    {title}
-                </Typography>
             </CardContent>
         </Card>
     );
@@ -103,90 +108,80 @@ const AdminHome = () => {
             <Container maxWidth="xl">
                 <GreetingHeader userName={user?.name} role="Admin" />
 
-                {/* Stats Grid */}
-                <Grid container spacing={3} sx={{ mb: 4 }}>
+                <Grid container spacing={2.5} sx={{ mb: 3 }}>
                     <Grid item xs={12} sm={6} md={3}>
                         <StatCard
                             title="Total Registered Users"
                             value={stats.total_users}
-                            icon={<PeopleIcon sx={{ fontSize: 28, color: '#007AFF' }} />}
-                            iconBg="#E3F2FD"
-                            trend="+4%"
-                            trendColor="#34C759"
+                            icon={<PeopleIcon sx={{ fontSize: 26, color: '#007AFF' }} />}
+                            iconBg="#E3F2FD" iconColor="#007AFF"
+                            trend="+4%" trendColor="#34C759"
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
                         <StatCard
                             title="Total Pickups Today"
                             value={stats.total_pickups}
-                            icon={<LocalShippingIcon sx={{ fontSize: 28, color: '#34C759' }} />}
-                            iconBg="#E8F5E9"
-                            trend="+12%"
-                            trendColor="#34C759"
+                            icon={<LocalShippingIcon sx={{ fontSize: 26, color: '#34C759' }} />}
+                            iconBg="#E8F5E9" iconColor="#34C759"
+                            trend="+12%" trendColor="#34C759"
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
                         <StatCard
                             title="Pending Requests"
                             value={stats.pending_pickups}
-                            icon={<AssignmentIcon sx={{ fontSize: 28, color: '#FF9500' }} />}
-                            iconBg="#FFF3E0"
-                            trend="Active"
-                            trendColor="#FF9500"
+                            icon={<AssignmentIcon sx={{ fontSize: 26, color: '#FF9500' }} />}
+                            iconBg="#FFF3E0" iconColor="#FF9500"
+                            trend="Active" trendColor="#FF9500"
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
                         <StatCard
                             title="Open Complaints"
                             value={stats.open_complaints}
-                            icon={<ReportProblemIcon sx={{ fontSize: 28, color: '#FF3B30' }} />}
-                            iconBg="#FFEBEE"
-                            trend="High"
-                            trendColor="#FF3B30"
+                            icon={<ReportProblemIcon sx={{ fontSize: 26, color: '#FF3B30' }} />}
+                            iconBg="#FFEBEE" iconColor="#FF3B30"
+                            trend="High" trendColor="#FF3B30"
                         />
                     </Grid>
                 </Grid>
 
                 {/* Action Buttons */}
-                <Grid container spacing={2} sx={{ mb: 4 }}>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <Button
-                            variant="contained"
-                            fullWidth
-                            size="large"
-                            startIcon={<MapIcon />}
-                            onClick={() => navigate('/admin/pickups')}
-                            sx={{ py: 1.5, fontWeight: 600 }}
-                        >
-                            Manage All Pickups
-                        </Button>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <Button
-                            variant="outlined"
-                            fullWidth
-                            size="large"
-                            startIcon={<WarningIcon />}
-                            onClick={() => navigate('/admin/complaints')}
-                            sx={{ py: 1.5, fontWeight: 600 }}
-                        >
-                            Review Pending Complaints
-                        </Button>
-                    </Grid>
-                </Grid>
+                <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        startIcon={<MapIcon />}
+                        onClick={() => navigate('/admin/pickups')}
+                        sx={{ py: 1.25, px: 3, fontWeight: 700, borderRadius: 2.5, boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}
+                    >
+                        Manage All Pickups
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        size="large"
+                        startIcon={<WarningIcon />}
+                        onClick={() => navigate('/admin/complaints')}
+                        sx={{ py: 1.25, px: 3, fontWeight: 700, borderRadius: 2.5 }}
+                    >
+                        Review Pending Complaints
+                    </Button>
+                </Box>
 
-                <Grid container spacing={3} sx={{ mb: 4 }}>
+                <Box sx={{ display: 'flex', gap: 2.5, mb: 4, alignItems: 'stretch' }}>
                     {/* Live Pickup Map */}
-                    <Grid item xs={12} md={8}>
-                        <Card>
-                            <CardContent sx={{ p: 3 }}>
-                                <Typography variant="h6" fontWeight={700} gutterBottom>
-                                    Live Pickup Map
-                                </Typography>
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Card sx={{ height: '100%', borderRadius: 3, border: '1px solid', borderColor: 'divider', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
+                            <CardContent sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                                    <MapIcon sx={{ color: '#007AFF', fontSize: 20 }} />
+                                    <Typography variant="h6" fontWeight={700}>Live Pickup Map</Typography>
+                                </Box>
                                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                                     Real-time tracking of active collection fleets
                                 </Typography>
-                                <Box sx={{ height: 400, borderRadius: 2, overflow: 'hidden', bgcolor: 'background.default' }}>
+                                <Box sx={{ flex: 1, minHeight: 340, borderRadius: 2, overflow: 'hidden', bgcolor: 'background.default' }}>
                                     <MapComponent
                                         markers={pickups.filter(p => p.latitude && p.longitude).map(p => ({
                                             lat: p.latitude,
@@ -198,12 +193,12 @@ const AdminHome = () => {
                                 </Box>
                             </CardContent>
                         </Card>
-                    </Grid>
+                    </Box>
 
                     {/* Pickup Status */}
-                    <Grid item xs={12} md={4}>
-                        <Card>
-                            <CardContent sx={{ p: 3 }}>
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Card sx={{ height: '100%', borderRadius: 3, border: '1px solid', borderColor: 'divider', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
+                            <CardContent sx={{ p: 3, display: 'flex', flexDirection: 'column', height: '100%' }}>
                                 <Typography variant="h6" fontWeight={700} gutterBottom>
                                     Pickup Status
                                 </Typography>
@@ -276,11 +271,11 @@ const AdminHome = () => {
                                 </Button>
                             </CardContent>
                         </Card>
-                    </Grid>
-                </Grid>
+                    </Box>
+                </Box>
 
                 {/* Recent Pickups Table */}
-                <Card>
+                {/* <Card>
                     <CardContent sx={{ p: 3 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                             <Typography variant="h6" fontWeight={700}>
@@ -380,7 +375,7 @@ const AdminHome = () => {
                             </Table>
                         </TableContainer>
                     </CardContent>
-                </Card>
+                </Card> */}
             </Container>
         </Layout>
     );

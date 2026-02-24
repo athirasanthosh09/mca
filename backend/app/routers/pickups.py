@@ -95,10 +95,23 @@ async def update_pickup(
 
     update_data = pickup_in.dict(exclude_unset=True)
 
-    # Driver can only update status
+    # Drivers can only update status, and only between Assigned ↔ Completed
+    # (allows undoing an accidental completion, but cannot touch Missed)
     if current_user.role == Role.DRIVER:
-        allowed_updates = {"status"}
-        update_data = {k: v for k, v in update_data.items() if k in allowed_updates}
+        new_status = update_data.get("status")
+        allowed_driver_statuses = {PickupStatus.COMPLETED, PickupStatus.ASSIGNED}
+        if new_status and new_status not in allowed_driver_statuses:
+            raise HTTPException(
+                status_code=403,
+                detail="Drivers can only set status to Completed or revert to Assigned."
+            )
+        # Missed pickups cannot be touched by drivers
+        if pickup.get("status") == PickupStatus.MISSED:
+            raise HTTPException(
+                status_code=400,
+                detail="Missed pickups cannot be modified."
+            )
+        update_data = {k: v for k, v in update_data.items() if k in {"status"}}
 
     # Auto-set completed_at timestamp when status changes to Completed
     if update_data.get("status") == PickupStatus.COMPLETED:

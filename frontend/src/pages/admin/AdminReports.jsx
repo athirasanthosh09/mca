@@ -162,56 +162,55 @@ export default function AdminReports() {
                             icon={<ReportProblemIcon sx={{ fontSize: 24 }} />}
                             color="#E53935" bg="#FFEBEE"
                         />
-                        <Grid container spacing={3}>
-                            {/* Summary cards */}
+                        {/* Summary stat cards */}
+                        <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
                             {[
-                                { label: 'Total', value: complaint.total, color: '#2D7DD2', bg: '#EBF5FF' },
-                                { label: 'Open', value: complaint.by_status?.Open || 0, color: '#E67E22', bg: '#FFF8EB' },
-                                { label: 'In Progress', value: complaint.by_status?.['In Progress'] || 0, color: '#2D7DD2', bg: '#EBF5FF' },
-                                { label: 'Resolved', value: complaint.by_status?.Resolved || 0, color: '#27AE60', bg: '#EDFAF3' },
-                                { label: 'Avg Resolution', value: complaint.avg_resolution_hours ? `${complaint.avg_resolution_hours}h` : '—', color: '#9B59B6', bg: '#F3E8FF' },
+                                { label: 'Total', value: complaint.total, color: '#2D7DD2' },
+                                { label: 'Open', value: complaint.by_status?.Open || 0, color: '#E67E22' },
+                                { label: 'In Progress', value: complaint.by_status?.['In Progress'] || 0, color: '#2D7DD2' },
+                                { label: 'Resolved', value: complaint.by_status?.Resolved || 0, color: '#27AE60' },
+                                { label: 'Avg Resolution', value: complaint.avg_resolution_hours ? `${complaint.avg_resolution_hours}h` : '—', color: '#9B59B6' },
                             ].map(s => (
-                                <Grid item xs={6} sm={4} md={2.4} key={s.label}>
-                                    <Card sx={{ borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
-                                        <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-                                            <Typography variant="h5" fontWeight={800} sx={{ color: s.color }}>{s.value}</Typography>
-                                            <Typography variant="caption" color="text.secondary">{s.label}</Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
+                                <Card key={s.label} sx={{ flex: '1 1 100px', borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
+                                    <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
+                                        <Typography variant="h5" fontWeight={800} sx={{ color: s.color }}>{s.value}</Typography>
+                                        <Typography variant="caption" color="text.secondary">{s.label}</Typography>
+                                    </CardContent>
+                                </Card>
                             ))}
+                        </Box>
 
-                            {/* Status Pie */}
-                            <Grid item xs={12} md={6}>
+                        {/* Pie charts — each exactly 50% */}
+                        <Box sx={{ display: 'flex', gap: 2 }}>
+                            <Box sx={{ flex: 1, minWidth: 0 }}>
                                 <Card sx={{ borderRadius: 3, border: '1px solid', borderColor: 'divider', p: 2 }}>
-                                    <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 2 }}>Status Breakdown</Typography>
-                                    <ResponsiveContainer width="100%" height={260}>
+                                    <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 1 }}>Status Breakdown</Typography>
+                                    <ResponsiveContainer width="100%" height={300}>
                                         <PieChart>
-                                            <Pie data={statusPie} cx="50%" cy="50%" outerRadius={90} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+                                            <Pie data={statusPie} cx="50%" cy="45%" outerRadius={90} dataKey="value">
                                                 {statusPie.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                                             </Pie>
-                                            <RechartTooltip />
+                                            <RechartTooltip formatter={(v, n) => [v, n]} />
+                                            <Legend verticalAlign="bottom" height={40} />
                                         </PieChart>
                                     </ResponsiveContainer>
                                 </Card>
-                            </Grid>
-
-                            {/* Category Pie */}
-                            <Grid item xs={12} md={6}>
+                            </Box>
+                            <Box sx={{ flex: 1, minWidth: 0 }}>
                                 <Card sx={{ borderRadius: 3, border: '1px solid', borderColor: 'divider', p: 2 }}>
-                                    <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 2 }}>By Category</Typography>
-                                    <ResponsiveContainer width="100%" height={260}>
+                                    <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 1 }}>By Category</Typography>
+                                    <ResponsiveContainer width="100%" height={300}>
                                         <PieChart>
-                                            <Pie data={categoryPie} cx="50%" cy="50%" outerRadius={90} dataKey="value" label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}>
+                                            <Pie data={categoryPie} cx="50%" cy="45%" outerRadius={90} dataKey="value">
                                                 {categoryPie.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                                             </Pie>
-                                            <RechartTooltip />
-                                            <Legend />
+                                            <RechartTooltip formatter={(v, n) => [v, n]} />
+                                            <Legend verticalAlign="bottom" height={40} />
                                         </PieChart>
                                     </ResponsiveContainer>
                                 </Card>
-                            </Grid>
-                        </Grid>
+                            </Box>
+                        </Box>
                     </Box>
                 )}
 
